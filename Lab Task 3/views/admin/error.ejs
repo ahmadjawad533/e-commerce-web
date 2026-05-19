@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body class="admin-body">
+
+  <%- include('partials/sidebar', { activePage: '' }) %>
+
+  <main class="admin-main">
+    <header class="admin-topbar">
+      <h1 class="admin-page-title">Error</h1>
+    </header>
+
+    <section class="admin-card error-page">
+      <div class="error-icon">⚠</div>
+      <h2>Something went wrong</h2>
+      <p class="error-message"><%= message %></p>
+      <a href="/admin" class="btn-admin-primary">← Back to Dashboard</a>
+    </section>
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/admin.css" />
+  <style>
+    /* Additional styles for sales dashboard */
+    .refresh-indicator {
+      display: inline-block;
+      margin-left: 10px;
+      font-size: 0.9rem;
+      color: #666;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .refresh-indicator.active {
+      opacity: 1;
+    }
+
+    .stat-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card.updating::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #4CAF50, transparent);
+      animation: slide 1s ease-in-out;
+    }
+
+    @keyframes slide {
+      to {
+        left: 100%;
+      }
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #333;
+      display: block;
+      margin-top: 8px;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-meta {
+      font-size: 0.85rem;
+      color: #888;
+      margin-top: 4px;
+    }
+
+    .orders-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .orders-table th {
+      background: #f5f5f5;
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 2px solid #ddd;
+    }
+
+    .orders-table td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .orders-table tr:hover {
+      background: #f9f9f9;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .status-badge.pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-badge.confirmed {
+      background: #d1ecf1;
+      color: #0c5460;
+    }
+
+    .status-badge.shipped {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-badge.delivered {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-badge.cancelled {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #999;
+    }
+
+    .chart-container {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .last-updated {
+      font-size: 0.85rem;
+      color: #888;
+      text-align: right;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body class="admin-body">
+
+  <%- include('partials/sidebar', { activePage: 'sales' }) %>
+
+  <main class="admin-main">
+
+    <!-- ── Top bar ── -->
+    <header class="admin-topbar">
+      <h1 class="admin-page-title">
+        Sales Dashboard
+        <span class="refresh-indicator" id="refreshIndicator">🔄 Updating...</span>
+      </h1>
+      <div>
+        <span class="last-updated">Last updated: <span id="lastUpdated">Just now</span></span>
+      </div>
+    </header>
+
+    <!-- ── Stats row ── -->
+    <div class="stats-row">
+      <div class="stat-card" id="revenueCard">
+        <span class="stat-label">Total Revenue</span>
+        <span class="stat-value" id="totalRevenue">PKR <%= Number(totalRevenue).toLocaleString() %></span>
+      </div>
+
+      <div class="stat-card" id="ordersCard">
+        <span class="stat-label">Total Orders</span>
+        <span class="stat-value" id="totalOrders"><%= totalOrders %></span>
+      </div>
+
+      <div class="stat-card" id="avgOrderCard">
+        <span class="stat-label">Average Order Value</span>
+        <span class="stat-value" id="averageOrderValue">PKR <%= Number(averageOrderValue).toLocaleString() %></span>
+      </div>
+
+      <div class="stat-card" id="productsSoldCard">
+        <span class="stat-label">Products Sold</span>
+        <span class="stat-value" id="totalProductsSold"><%= totalProductsSold %></span>
+      </div>
+    </div>
+
+    <!-- ── Top Product Card ── -->
+    <section class="admin-card" style="margin-top: 2rem;">
+      <div class="admin-card-header">
+        <h2>🏆 Top Selling Product</h2>
+      </div>
+      <div style="padding: 1.5rem;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div style="flex: 1;">
+            <h3 id="topProduct" style="margin: 0; font-size: 1.5rem; color: #333;">
+              <%= topProduct %>
+            </h3>
+            <p id="topProductMeta" style="margin: 0.5rem 0 0 0; color: #666;">
+              <span id="topProductQuantity"><%= topProductQuantity %></span> units sold
+            </p>
+          </div>
+          <% if (topProductId) { %>
+          <div>
+            <a href="/admin/products/<%= topProductId %>/edit" class="btn-edit">View Product</a>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Recent Orders Table ── -->
+    <section class="admin-card" style="margin-top: 2rem;">
+      <div class="admin-card-header">
+        <h2>Recent Transactions</h2>
+        <span class="badge" id="recentOrdersCount"><%= recentOrders.length %> orders</span>
+      </div>
+
+      <% if (recentOrders.length === 0) { %>
+        <div class="empty-state">
+          <p>No orders yet. Orders will appear here once customers start purchasing.</p>
+        </div>
+      <% } else { %>
+
+        <div class="table-wrapper">
+          <table class="orders-table" id="recentOrdersTable">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Items</th>
+                <th>Total Amount</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% recentOrders.forEach(function(order) { %>
+                <tr>
+                  <td><code><%= order._id.toString().slice(-8) %></code></td>
+                  <td>
+                    <% if (order.user) { %>
+                      <%= order.user.name || order.user.email %>
+                    <% } else { %>
+                      <em>Guest</em>
+                    <% } %>
+                  </td>
+                  <td>
+                    <% if (order.items && order.items.length > 0) { %>
+                      <%= order.items.map(item => {
+                        const productName = item.product ? item.product.name : 'Unknown';
+                        return `${productName} (×${item.quantity})`;
+                      }).join(', ') %>
+                    <% } else { %>
+                      <em>No items</em>
+                    <% } %>
+                  </td>
+                  <td><strong>PKR <%= order.totalAmount.toLocaleString() %></strong></td>
+                  <td>
+                    <span class="status-badge <%= order.status %>"><%= order.status %></span>
+                  </td>
+                  <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+
+      <% } %>
+    </section>
+
+  </main>
+
+  <!-- ── jQuery for AJAX polling ── -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    // ════════════════════════════════════════════════════════════════════════
+    // Real-time sales data polling with jQuery
+    // Fetches /api/v1/sales-data every 10 seconds and updates the DOM
+    // ════════════════════════════════════════════════════════════════════════
+
+    $(document).ready(function() {
+      // Poll every 10 seconds (10000 milliseconds)
+      const POLL_INTERVAL = 10000;
+
+      function updateSalesData() {
+        // Show refresh indicator
+        $('#refreshIndicator').addClass('active');
+
+        $.ajax({
+          url: '/api/v1/sales-data',
+          method: 'GET',
+          dataType: 'json',
+          success: function(response) {
+            if (response.success && response.data) {
+              const data = response.data;
+
+              // ── Update stat cards with animation ──
+              updateStatCard('#totalRevenue', 'PKR ' + Number(data.totalRevenue).toLocaleString(), '#revenueCard');
+              updateStatCard('#totalOrders', data.totalOrders, '#ordersCard');
+              updateStatCard('#averageOrderValue', 'PKR ' + Number(data.averageOrderValue).toLocaleString(), '#avgOrderCard');
+              updateStatCard('#totalProductsSold', data.totalProductsSold, '#productsSoldCard');
+
+              // ── Update top product ──
+              $('#topProduct').text(data.topProduct);
+              $('#topProductQuantity').text(data.topProductQuantity);
+
+              // ── Update recent orders count ──
+              $('#recentOrdersCount').text(data.recentOrders.length + ' orders');
+
+              // ── Update recent orders table ──
+              updateRecentOrdersTable(data.recentOrders);
+
+              // ── Update last updated timestamp ──
+              const now = new Date();
+              $('#lastUpdated').text(now.toLocaleTimeString());
+
+              console.log('✅ Sales data updated successfully');
+            }
+          },
+          error: function(xhr, status, error) {
+            console.error('❌ Failed to fetch sales data:', error);
+          },
+          complete: function() {
+            // Hide refresh indicator after a short delay
+            setTimeout(function() {
+              $('#refreshIndicator').removeClass('active');
+            }, 500);
+          }
+        });
+      }
+
+      // Helper function to update a stat card with animation
+      function updateStatCard(selector, newValue, cardSelector) {
+        const $element = $(selector);
+        const oldValue = $element.text();
+
+        if (oldValue !== newValue.toString()) {
+          // Add updating animation to card
+          $(cardSelector).addClass('updating');
+
+          // Update the value
+          $element.text(newValue);
+
+          // Remove animation class after it completes
+          setTimeout(function() {
+            $(cardSelector).removeClass('updating');
+          }, 1000);
+        }
+      }
+
+      // Helper function to update recent orders table
+      function updateRecentOrdersTable(orders) {
+        if (orders.length === 0) {
+          // Show empty state if no orders
+          const emptyHtml = '<tr><td colspan="6" style="text-align: center; padding: 2rem; color: #999;">No orders yet.</td></tr>';
+          $('#recentOrdersTable tbody').html(emptyHtml);
+          return;
+        }
+
+        let html = '';
+        orders.forEach(function(order) {
+          const orderId = order._id.slice(-8);
+          const customerName = order.user ? (order.user.name || order.user.email) : 'Guest';
+          
+          // Build items string
+          let itemsStr = '';
+          if (order.items && order.items.length > 0) {
+            itemsStr = order.items.map(function(item) {
+              const productName = item.product ? item.product.name : 'Unknown';
+              return productName + ' (×' + item.quantity + ')';
+            }).join(', ');
+          } else {
+            itemsStr = '<em>No items</em>';
+          }
+
+          const totalAmount = 'PKR ' + order.totalAmount.toLocaleString();
+          const status = order.status;
+          const date = new Date(order.createdAt).toLocaleDateString();
+
+          html += '<tr>';
+          html += '<td><code>' + orderId + '</code></td>';
+          html += '<td>' + customerName + '</td>';
+          html += '<td>' + itemsStr + '</td>';
+          html += '<td><strong>' + totalAmount + '</strong></td>';
+          html += '<td><span class="status-badge ' + status + '">' + status + '</span></td>';
+          html += '<td>' + date + '</td>';
+          html += '</tr>';
+        });
+
+        $('#recentOrdersTable tbody').html(html);
+      }
+
+      // Start polling
+      setInterval(updateSalesData, POLL_INTERVAL);
+
+      console.log('🔄 Real-time sales polling started (every 10 seconds)');
+    });
+  </script>
+
+</body>
+</html>

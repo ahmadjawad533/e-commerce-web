@@ -1,0 +1,43 @@
+<!-- views/admin/partials/sidebar.ejs -->
+<!-- Reusable sidebar included in every admin page -->
+
+<aside class="admin-sidebar">
+
+  <!-- Brand -->
+  <div class="admin-brand">
+    <a href="/admin">ENGINE</a>
+    <span>Admin Panel</span>
+  </div>
+
+  <!-- Navigation links -->
+  <nav class="admin-nav" aria-label="Admin navigation">
+    <ul>
+      <li>
+        <a href="/admin" class="<%= locals.activePage === 'dashboard' ? 'active' : '' %>">
+          <span class="nav-icon">▦</span> Dashboard
+        </a>
+      </li>
+      <li>
+        <a href="/admin/sales" class="<%= locals.activePage === 'sales' ? 'active' : '' %>">
+          <span class="nav-icon">📊</span> Sales Dashboard
+        </a>
+      </li>
+      <li>
+        <a href="/admin/products/new" class="<%= locals.activePage === 'add' ? 'active' : '' %>">
+          <span class="nav-icon">＋</span> Add Product
+        </a>
+      </li>
+      <li>
+        <a href="/products" target="_blank">
+          <span class="nav-icon">↗</span> View Store
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Footer -->
+  <div class="admin-sidebar-footer">
+    <a href="/">← Back to Site</a>
+  </div>
+
+</aside>

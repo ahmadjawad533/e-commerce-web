@@ -1,0 +1,18 @@
+<section class="categories" aria-labelledby="categories-heading">
+  <div class="section-title">
+    <h2 id="categories-heading">Shop by Category</h2>
+    <div class="divider"></div>
+    <p>Find your perfect style across our curated collections</p>
+  </div>
+
+  <div class="categories-grid">
+    <% categories.forEach(function(cat) { %>
+    <article class="category-card">
+      <img src="<%= cat.image %>" alt="<%= cat.alt %>" />
+      <div class="category-overlay">
+        <h3><%= cat.name %></h3>
+      </div>
+    </article>
+    <% }); %>
+  </div>
+</section>

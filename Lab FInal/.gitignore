@@ -1,0 +1,155 @@
+# ============================================================================
+# Node.js & NPM
+# ============================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ============================================================================
+# Environment Variables & Secrets
+# ============================================================================
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.*.local
+*.pem
+*.key
+*.cert
+
+# ============================================================================
+# Uploaded Files (User Content)
+# ============================================================================
+public/uploads/*
+!public/uploads/.gitignore
+
+# ============================================================================
+# Operating System Files
+# ============================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ============================================================================
+# IDE & Editor Files
+# ============================================================================
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# JetBrains (WebStorm, IntelliJ, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+
+# ============================================================================
+# Logs & Debugging
+# ============================================================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# ============================================================================
+# Testing & Coverage
+# ============================================================================
+coverage/
+.nyc_output/
+*.lcov
+.grunt
+lib-cov
+
+# ============================================================================
+# Build & Distribution
+# ============================================================================
+dist/
+build/
+.cache/
+.parcel-cache/
+.next/
+out/
+.nuxt/
+
+# ============================================================================
+# Temporary Files
+# ============================================================================
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# ============================================================================
+# Database Files (if using local DB)
+# ============================================================================
+*.sqlite
+*.sqlite3
+*.db
+
+# MongoDB local data (if running locally)
+data/db/
+dump/
+
+# ============================================================================
+# Documentation Build Files
+# ============================================================================
+docs/_build/
+site/
+
+# ============================================================================
+# Optional: Keep these commented out unless needed
+# ============================================================================
+# If you want to ignore all documentation markdown files (NOT RECOMMENDED)
+# *.md
+
+# If you want to ignore specific large documentation files
+# SALES_DASHBOARD_IMPLEMENTATION.md
+# ARCHITECTURE_DIAGRAM.md
+# VERIFICATION_CHECKLIST.md

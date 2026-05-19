@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Engine - Fashion for Everyone</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: #222; background: #fff; }
+
+    /* ── HEADER ── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 70px;
+      background: #fff;
+      border-bottom: 1px solid #e0e0e0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo a {
+      font-size: 1.8rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-decoration: none;
+      color: #111;
+      text-transform: uppercase;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 32px;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #333;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    nav ul li a:hover { color: #c0392b; }
+
+    .header-icons { display: flex; gap: 18px; align-items: center; }
+
+    .header-icons a {
+      text-decoration: none;
+      font-size: 0.85rem;
+      color: #333;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .header-icons a:hover { color: #c0392b; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 560px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 80px;
+      max-width: 600px;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: #c0392b;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      margin-bottom: 20px;
+    }
+
+    .hero-content h1 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.1;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .hero-content p {
+      font-size: 1.05rem;
+      color: #ccc;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: #c0392b;
+      color: #fff;
+      padding: 14px 36px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover { background: #a93226; }
+
+    .hero-image-block {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      height: 100%;
+      width: 50%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .hero-image-block img {
+      height: 100%;
+      object-fit: cover;
+      width: 100%;
+      opacity: 0.55;
+    }
+
+    /* ── SECTION TITLES ── */
+    .section-title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-title h2 {
+      font-size: 1.8rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #111;
+    }
+
+    .section-title p {
+      font-size: 0.95rem;
+      color: #777;
+      margin-top: 8px;
+    }
+
+    .divider {
+      width: 50px;
+      height: 3px;
+      background: #c0392b;
+      margin: 10px auto 0;
+    }
+
+    /* ── CATEGORIES ── */
+    .categories { padding: 60px 40px; background: #f7f7f7; }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .category-card {
+      position: relative;
+      overflow: hidden;
+      height: 320px;
+      cursor: pointer;
+    }
+
+    .category-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s;
+    }
+
+    .category-card:hover img { transform: scale(1.06); }
+
+    .category-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 60%);
+      display: flex;
+      align-items: flex-end;
+      padding: 24px;
+    }
+
+    .category-overlay h3 {
+      color: #fff;
+      font-size: 1.4rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* ── FEATURED PRODUCTS ── */
+    .featured-products { padding: 60px 40px; background: #fff; }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .product-card {
+      border: 1px solid #eee;
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+
+    .product-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.1); }
+
+    .product-image {
+      position: relative;
+      overflow: hidden;
+      height: 300px;
+      background: #f5f5f5;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s;
+    }
+
+    .product-card:hover .product-image img { transform: scale(1.05); }
+
+    .product-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: #c0392b;
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      text-transform: uppercase;
+    }
+
+    .product-info { padding: 16px; }
+
+    .product-info h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      color: #222;
+    }
+
+    .product-pricing { display: flex; align-items: center; gap: 10px; }
+
+    .price-current {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #c0392b;
+    }
+
+    .price-original {
+      font-size: 0.85rem;
+      color: #aaa;
+      text-decoration: line-through;
+    }
+
+    .btn-add-cart {
+      display: block;
+      width: 100%;
+      margin-top: 12px;
+      padding: 10px;
+      background: #111;
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-add-cart:hover { background: #c0392b; }
+
+    /* ── PROMO BANNER ── */
+    .promo-banner {
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 50px 40px;
+    }
+
+    .promo-banner h2 {
+      font-size: 2rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 10px;
+    }
+
+    .promo-banner p {
+      font-size: 1rem;
+      color: #aaa;
+      margin-bottom: 24px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #1a1a1a;
+      color: #ccc;
+      padding: 50px 40px 20px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      max-width: 1100px;
+      margin: 0 auto 40px;
+    }
+
+    .footer-brand .logo-text {
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      color: #fff;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .footer-brand p {
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: #999;
+    }
+
+    .footer-col h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+
+    .footer-col ul { list-style: none; }
+
+    .footer-col ul li { margin-bottom: 10px; }
+
+    .footer-col ul li a {
+      text-decoration: none;
+      font-size: 0.88rem;
+      color: #999;
+      transition: color 0.2s;
+    }
+
+    .footer-col ul li a:hover { color: #c0392b; }
+
+    .footer-contact p {
+      font-size: 0.88rem;
+      color: #999;
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #333;
+      padding-top: 20px;
+      text-align: center;
+      font-size: 0.82rem;
+      color: #666;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+  </style>
+
+  <link rel="stylesheet" href="style.css" />
+
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════════ -->
+ <header>
+    <div class="logo">
+      <a href="#">ENGINE</a>
+    </div>
+    <nav aria-label="Main navigation">
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Shop</a></li>
+        <li><a href="#">Men</a></li>
+        <li><a href="#">Women</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-icons">
+      <a href="#" aria-label="Search">Search</a>
+      <a href="#" aria-label="Wishlist">Wishlist</a>
+      <a href="#" aria-label="Cart">Cart (0)</a>
+    </div>
+  </header>
+    <!-- Desktop nav — built dynamically by nav.js -->
+    <nav class="nav-desktop" id="nav-desktop" aria-label="Main navigation">
+      <ul id="nav-desktop-list"></ul>
+    </nav>
+
+    <!-- Zoom-collapsed "Menu" dropdown — shown by JS when zoom >= 125% on desktop -->
+    <div class="nav-zoom" id="nav-zoom" aria-hidden="true">
+      <button class="nav-zoom-trigger" id="nav-zoom-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="nav-zoom-dropdown">
+        Menu <span class="nav-zoom-arrow" aria-hidden="true">&#9662;</span>
+      </button>
+      <ul class="nav-zoom-dropdown" id="nav-zoom-dropdown" role="menu"></ul>
+    </div>
+
+    <!-- Hamburger button — visible below 1024px, toggled by JS -->
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-mobile">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+
+  </header>
+
+  <!-- Mobile nav drawer — built dynamically by nav.js -->
+  <nav class="nav-mobile" id="nav-mobile" aria-label="Mobile navigation">
+    <ul id="nav-mobile-list"></ul>
+  </nav>
+  <main>
+
+    <!-- ══════════════════════════════════════════
+         HERO SECTION
+    ══════════════════════════════════════════ -->
+    <section class="hero" aria-label="Hero banner">
+      <div class="hero-content">
+        <span class="hero-tag">New Arrivals 2025</span>
+        <h1>Dress to<br>Impress</h1>
+        <h1>Dress to<br />Impress</h1>
+        <p>Explore the latest collection of premium fashion for men and women. Style that speaks before you do.</p>
+        <a href="#" class="btn-primary">Shop Now</a>
+      </div>
+      <div class="hero-image-block" aria-hidden="true">
+        <img
+          src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&auto=format&fit=crop"
+          alt="Fashion model wearing Engine clothing"
+        />
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         CATEGORIES SECTION
+    ══════════════════════════════════════════ -->
+    <section class="categories" aria-labelledby="categories-heading">
+      <div class="section-title">
+        <h2 id="categories-heading">Shop by Category</h2>
+        <div class="divider"></div>
+        <p>Find your perfect style across our curated collections</p>
+      </div>
+
+      <div class="categories-grid">
+
+        <article class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1617137968427-85924c800a22?w=600&auto=format&fit=crop"
+            alt="Men's clothing collection"
+          />
+          <div class="category-overlay">
+            <h3>Men</h3>
+          </div>
+        </article>
+
+        <article class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&auto=format&fit=crop"
+            alt="Women's clothing collection"
+          />
+          <div class="category-overlay">
+            <h3>Women</h3>
+          </div>
+        </article>
+
+        <article class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=600&auto=format&fit=crop"
+            alt="Kids' clothing collection"
+          />
+          <div class="category-overlay">
+            <h3>Kids</h3>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         FEATURED PRODUCTS
+    ══════════════════════════════════════════ -->
+    <section class="featured-products" aria-labelledby="products-heading">
+      <div class="section-title">
+        <h2 id="products-heading">Featured Products</h2>
+        <div class="divider"></div>
+        <p>Handpicked styles for the season</p>
+      </div>
+
+      <div class="products-grid">
+
+        <article class="product-card">
+          <div class="product-image">
+            <img
+              src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&auto=format&fit=crop"
+              alt="Classic White Crew Neck T-Shirt"
+            />
+            <span class="product-badge">New</span>
+          </div>
+          <div class="product-info">
+            <h3>Classic Crew Neck Tee</h3>
+            <div class="product-pricing">
+              <span class="price-current">PKR 1,490</span>
+              <span class="price-original">PKR 1,990</span>
+            </div>
+            <button class="btn-add-cart" type="button">Add to Cart</button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image">
+            <img
+              src="https://images.unsplash.com/photo-1594938298603-c8148c4b4e5b?w=500&auto=format&fit=crop"
+              src="https://images.unsplash.com/photo-1666358776109-d71f69a08ce2?q=80&w=687&auto=format&fit=crop
+              alt="Slim Fit Chino Trousers"
+            />
+            <span class="product-badge">Sale</span>
+          </div>
+          <div class="product-info">
+            <h3>Slim Fit Chino Trousers</h3>
+            <div class="product-pricing">
+              <span class="price-current">PKR 2,990</span>
+              <span class="price-original">PKR 3,990</span>
+            </div>
+            <button class="btn-add-cart" type="button">Add to Cart</button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image">
+            <img
+              src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500&auto=format&fit=crop"
+              alt="Women's Floral Wrap Dress"
+            />
+          </div>
+          <div class="product-info">
+            <h3>Floral Wrap Dress</h3>
+            <div class="product-pricing">
+              <span class="price-current">PKR 3,490</span>
+            </div>
+            <button class="btn-add-cart" type="button">Add to Cart</button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image">
+            <img
+              src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500&auto=format&fit=crop"
+              alt="Men's Casual Polo Shirt"
+            />
+            <span class="product-badge">New</span>
+          </div>
+          <div class="product-info">
+            <h3>Casual Polo Shirt</h3>
+            <div class="product-pricing">
+              <span class="price-current">PKR 1,890</span>
+              <span class="price-original">PKR 2,490</span>
+            </div>
+            <button class="btn-add-cart" type="button">Add to Cart</button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image">
+            <img
+              src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&auto=format&fit=crop"
+              alt="Women's Linen Co-ord Set"
+            />
+            <span class="product-badge">Trending</span>
+          </div>
+          <div class="product-info">
+            <h3>Linen Co-ord Set</h3>
+            <div class="product-pricing">
+              <span class="price-current">PKR 4,990</span>
+              <span class="price-original">PKR 5,990</span>
+            </div>
+            <button class="btn-add-cart" type="button">Add to Cart</button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image">
+            <img
+              src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=500&auto=format&fit=crop"
+              alt="Men's Denim Jeans"
+            />
+          </div>
+          <div class="product-info">
+            <h3>Straight Fit Denim Jeans</h3>
+            <div class="product-pricing">
+              <span class="price-current">PKR 3,290</span>
+              <span class="price-original">PKR 4,200</span>
+            </div>
+            <button class="btn-add-cart" type="button">Add to Cart</button>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         PROMO BANNER
+    ══════════════════════════════════════════ -->
+    <section class="promo-banner" aria-label="Promotional offer">
+      <h2>End of Season Sale — Up to 50% Off</h2>
+      <p>Limited time offer. Shop before stocks run out.</p>
+      <a href="#" class="btn-primary">Explore Sale</a>
+    </section>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════ -->
+  <footer>
+    <div class="footer-grid">
+
+      <div class="footer-brand">
+        <p class="logo-text">Engine</p>
+        <p>Engine is Pakistan's leading fashion brand, offering premium quality clothing for men, women, and kids. Style, comfort, and affordability — all in one place.</p>
+      </div>
+
+      <nav class="footer-col" aria-label="Quick links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Shop</a></li>
+          <li><a href="#">New Arrivals</a></li>
+          <li><a href="#">Sale</a></li>
+          <li><a href="#">About Us</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer-col" aria-label="Categories">
+        <h4>Categories</h4>
+        <ul>
+          <li><a href="#">Men</a></li>
+          <li><a href="#">Women</a></li>
+          <li><a href="#">Kids</a></li>
+          <li><a href="#">Accessories</a></li>
+          <li><a href="#">Footwear</a></li>
+        </ul>
+      </nav>
+
+      <address class="footer-col footer-contact">
+        <h4>Contact Us</h4>
+        <p>Engine Pvt. Ltd.<br>Plot 14, Sector I-9,<br>Islamabad, Pakistan</p
+        <p>Engine Pvt. Ltd.<br />Plot 14, Sector I-9,<br />Islamabad, Pakistan</p>
+        <p>Phone: +92 51 111 364 364</p>
+        <p>Email: support@engine.com.pk</p>
+        <p>Mon – Sat: 9am – 6pm</p>
+      </address>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 Engine Pvt. Ltd. All rights reserved.</p>
+    </div>
+  </footer>
+  <script src="nav.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head', { title: title }) %>
+</head>
+<body>
+
+  <%- include('partials/header') %>
+
+  <main class="products-page">
+
+    <!-- ══════════════════════════════════════════════
+         PAGE HEADER
+    ══════════════════════════════════════════════ -->
+    <section class="products-page-header">
+      <h1>Our Products</h1>
+      <p><%= totalProducts %> item<%= totalProducts !== 1 ? 's' : '' %> found</p>
+    </section>
+
+    <div class="products-page-layout">
+
+      <!-- ══════════════════════════════════════════
+           FILTER SIDEBAR
+      ══════════════════════════════════════════ -->
+      <aside class="filter-sidebar">
+        <h2 class="filter-title">Filter &amp; Search</h2>
+
+        <!--
+          All filters live in one form so submitting any of them
+          sends all active values together as query parameters.
+        -->
+        <form class="filter-form" method="GET" action="/products">
+
+          <!-- Name search -->
+          <div class="filter-group">
+            <label for="search">Search by Name</label>
+            <input
+              type="text"
+              id="search"
+              name="search"
+              placeholder="e.g. Polo Shirt"
+              value="<%= filters.search %>"
+            />
+          </div>
+
+          <!-- Category dropdown -->
+          <div class="filter-group">
+            <label for="category">Category</label>
+            <select id="category" name="category">
+              <option value="">All Categories</option>
+              <% categories.forEach(function(cat) { %>
+                <option value="<%= cat %>" <%= filters.category === cat ? 'selected' : '' %>>
+                  <%= cat %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+
+          <!-- Price range -->
+          <div class="filter-group">
+            <label>Price Range (PKR)</label>
+            <div class="price-range-inputs">
+              <input
+                type="number"
+                name="minPrice"
+                placeholder="Min"
+                min="0"
+                value="<%= filters.minPrice %>"
+              />
+              <span>–</span>
+              <input
+                type="number"
+                name="maxPrice"
+                placeholder="Max"
+                min="0"
+                value="<%= filters.maxPrice %>"
+              />
+            </div>
+          </div>
+
+          <!-- Always reset to page 1 when filters change -->
+          <input type="hidden" name="page" value="1" />
+
+          <button type="submit" class="btn-filter">Apply Filters</button>
+          <a href="/products" class="btn-clear">Clear All</a>
+
+        </form>
+      </aside>
+
+      <!-- ══════════════════════════════════════════
+           PRODUCT GRID + PAGINATION
+      ══════════════════════════════════════════ -->
+      <section class="products-main">
+
+        <!-- ── No results message ── -->
+        <% if (products.length === 0) { %>
+          <div class="no-results">
+            <p>No products match your filters.</p>
+            <a href="/products" class="btn-primary">Clear Filters</a>
+          </div>
+
+        <% } else { %>
+
+          <!-- ── Product grid ── -->
+          <div class="products-grid">
+            <% products.forEach(function(product) { %>
+              <article class="product-card">
+
+                <!-- Product image -->
+                <div class="product-image">
+                  <img
+                    src="<%= product.image || 'https://placehold.co/500x400?text=No+Image' %>"
+                    alt="<%= product.name %>"
+                    loading="lazy"
+                  />
+                  <!-- Stock badge -->
+                  <% if (product.stock === 0) { %>
+                    <span class="product-badge out-of-stock">Out of Stock</span>
+                  <% } else if (product.stock < 10) { %>
+                    <span class="product-badge low-stock">Only <%= product.stock %> left</span>
+                  <% } %>
+                </div>
+
+                <!-- Product info -->
+                <div class="product-info">
+                  <span class="product-category"><%= product.category %></span>
+                  <h3><%= product.name %></h3>
+
+                  <!-- Star rating -->
+                  <div class="product-rating" aria-label="Rating: <%= product.rating %> out of 5">
+                    <%
+                      // Render filled, half, and empty stars
+                      const full  = Math.floor(product.rating);
+                      const half  = product.rating % 1 >= 0.5 ? 1 : 0;
+                      const empty = 5 - full - half;
+                    %>
+                    <% for (let i = 0; i < full;  i++) { %><span class="star filled">★</span><% } %>
+                    <% for (let i = 0; i < half;  i++) { %><span class="star half">★</span><% } %>
+                    <% for (let i = 0; i < empty; i++) { %><span class="star empty">☆</span><% } %>
+                    <span class="rating-value">(<%= product.rating.toFixed(1) %>)</span>
+                  </div>
+
+                  <div class="product-pricing">
+                    <span class="price-current">PKR <%= product.price.toLocaleString() %></span>
+                  </div>
+
+                  <button class="btn-add-cart" type="button">Add to Cart</button>
+                </div>
+
+              </article>
+            <% }); %>
+          </div>
+
+          <!-- ══════════════════════════════════════
+               PAGINATION CONTROLS
+          ══════════════════════════════════════ -->
+          <% if (totalPages > 1) { %>
+            <nav class="pagination" aria-label="Product pages">
+
+              <%
+                // Helper: build a URL that keeps all current filters but changes the page
+                function pageUrl(p) {
+                  const params = new URLSearchParams();
+                  if (filters.search)   params.set('search',   filters.search);
+                  if (filters.category) params.set('category', filters.category);
+                  if (filters.minPrice) params.set('minPrice', filters.minPrice);
+                  if (filters.maxPrice) params.set('maxPrice', filters.maxPrice);
+                  params.set('page', p);
+                  return '/products?' + params.toString();
+                }
+              %>
+
+              <!-- Previous button -->
+              <% if (currentPage > 1) { %>
+                <a href="<%= pageUrl(currentPage - 1) %>" class="page-btn" aria-label="Previous page">
+                  &laquo; Prev
+                </a>
+              <% } else { %>
+                <span class="page-btn disabled" aria-disabled="true">&laquo; Prev</span>
+              <% } %>
+
+              <!-- Page number buttons -->
+              <% pageNumbers.forEach(function(num) { %>
+                <% if (num === currentPage) { %>
+                  <span class="page-btn active" aria-current="page"><%= num %></span>
+                <% } else { %>
+                  <a href="<%= pageUrl(num) %>" class="page-btn"><%= num %></a>
+                <% } %>
+              <% }); %>
+
+              <!-- Next button -->
+              <% if (currentPage < totalPages) { %>
+                <a href="<%= pageUrl(currentPage + 1) %>" class="page-btn" aria-label="Next page">
+                  Next &raquo;
+                </a>
+              <% } else { %>
+                <span class="page-btn disabled" aria-disabled="true">Next &raquo;</span>
+              <% } %>
+
+            </nav>
+
+            <!-- Page info text -->
+            <p class="pagination-info">
+              Page <%= currentPage %> of <%= totalPages %>
+              &nbsp;·&nbsp;
+              Showing <%= (currentPage - 1) * 8 + 1 %>–<%= Math.min(currentPage * 8, totalProducts) %>
+              of <%= totalProducts %> products
+            </p>
+          <% } %>
+
+        <% } %> <!-- end products.length check -->
+
+      </section>
+    </div><!-- /.products-page-layout -->
+
+  </main>
+
+  <%- include('partials/footer') %>
+
+  <script src="/js/nav.js" defer></script>
+</body>
+</html>

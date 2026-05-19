@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Engine - Fashion for Everyone</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════════ -->
+
+  <header>
+    <div class="logo">
+      <a href="#">ENGINE</a>
+    </div>
+
+    <!-- Desktop nav — visible above 1024px -->
+    <nav class="nav-desktop" aria-label="Main navigation">
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Shop</a></li>
+        <li><a href="#">Men</a></li>
+        <li><a href="#">Women</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Hamburger button — visible below 1024px, toggled by JS -->
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-mobile">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+
+    <div class="header-icons">
+      <a href="#" aria-label="Search">Search</a>
+      <a href="#" aria-label="Wishlist">Wishlist</a>
+      <a href="#" aria-label="Cart">Cart (0)</a>
+    </div>
+  </header>
+
+  <!-- Mobile nav drawer — toggled by JS classList -->
+  <nav class="nav-mobile" id="nav-mobile" aria-label="Mobile navigation">
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Shop</a></li>
+      <li><a href="#">Men</a></li>
+      <li><a href="#">Women</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <!-- ══════════════════════════════════════════
+         HERO SECTION
+    ══════════════════════════════════════════ -->
+    <section class="hero" aria-label="Hero banner">
+      <div class="hero-content">
+        <span class="hero-tag">New Arrivals 2025</span>
+        <h1>Dress to<br />Impress</h1>
+        <p>Explore the latest collection of premium fashion for men and women. Style that speaks before you do.</p>
+        <a href="#" class="btn-primary">Shop Now</a>
+      </div>
+      <div class="hero-image-block" aria-hidden="true">
+        <img
+          src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&auto=format&fit=crop"
+          alt="Fashion model wearing Engine clothing"
+        />
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         CATEGORIES SECTION
+    ══════════════════════════════════════════ -->
+    <section class="categories" aria-labelledby="categories-heading">
+      <div class="section-title">
+        <h2 id="categories-heading">Shop by Category</h2>
+        <div class="divider"></div>
+        <p>Find your perfect style across our curated collections</p>
+      </div>
+
+      <div class="categories-grid">
+
+        <article class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1617137968427-85924c800a22?w=600&auto=format&fit=crop"
+            alt="Men's clothing collection"
+          />
+          <div class="category-overlay">
+            <h3>Men</h3>
+          </div>
+        </article>
+
+        <article class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&auto=format&fit=crop"
+            alt="Women's clothing collection"
+          />
+          <div class="category-overlay">
+            <h3>Women</h3>
+          </div>
+        </article>
+
+        <article class="category-card">
+          <img
+            src="https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=600&auto=format&fit=crop"
+            alt="Kids' clothing collection"
+          />
+          <div class="category-overlay">
+            <h3>Kids</h3>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         FEATURED PRODUCTS
+    ══════════════════════════════════════════ -->
+    <section class="featured-products" aria-labelledby="products-heading">
+      <div class="section-title">
+        <h2 id="products-heading">Featured Products</h2>
+        <div class="divider"></div>
+        <p>Handpicked styles for the season</p>
+      </div>
+
+      <div class="products-grid">
+
+        <article class="product-card">
+          <div class="product-image">
+            <img
+              src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&auto=format&fit=crop"
+              alt="Classic White Crew Neck T-Shirt"
+            />
+            <span class="product-badge">New</span>
+          </div>
+          <div class="product-info">
+            <h3>Classic Crew Neck Tee</h3>
+            <div class="product-pricing">
+              <span class="price-current">PKR 1,490</span>
+              <span class="price-original">PKR 1,990</span>
+            </div>
+            <button class="btn-add-cart" type="button">Add to Cart</button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image">
+            <img
+              src="https://images.unsplash.com/photo-1594938298603-c8148c4b4e5b?w=500&auto=format&fit=crop"
+              alt="Slim Fit Chino Trousers"
+            />
+            <span class="product-badge">Sale</span>
+          </div>
+          <div class="product-info">
+            <h3>Slim Fit Chino Trousers</h3>
+            <div class="product-pricing">
+              <span class="price-current">PKR 2,990</span>
+              <span class="price-original">PKR 3,990</span>
+            </div>
+            <button class="btn-add-cart" type="button">Add to Cart</button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image">
+            <img
+              src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500&auto=format&fit=crop"
+              alt="Women's Floral Wrap Dress"
+            />
+          </div>
+          <div class="product-info">
+            <h3>Floral Wrap Dress</h3>
+            <div class="product-pricing">
+              <span class="price-current">PKR 3,490</span>
+            </div>
+            <button class="btn-add-cart" type="button">Add to Cart</button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image">
+            <img
+              src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500&auto=format&fit=crop"
+              alt="Men's Casual Polo Shirt"
+            />
+            <span class="product-badge">New</span>
+          </div>
+          <div class="product-info">
+            <h3>Casual Polo Shirt</h3>
+            <div class="product-pricing">
+              <span class="price-current">PKR 1,890</span>
+              <span class="price-original">PKR 2,490</span>
+            </div>
+            <button class="btn-add-cart" type="button">Add to Cart</button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image">
+            <img
+              src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&auto=format&fit=crop"
+              alt="Women's Linen Co-ord Set"
+            />
+            <span class="product-badge">Trending</span>
+          </div>
+          <div class="product-info">
+            <h3>Linen Co-ord Set</h3>
+            <div class="product-pricing">
+              <span class="price-current">PKR 4,990</span>
+              <span class="price-original">PKR 5,990</span>
+            </div>
+            <button class="btn-add-cart" type="button">Add to Cart</button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image">
+            <img
+              src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=500&auto=format&fit=crop"
+              alt="Men's Denim Jeans"
+            />
+          </div>
+          <div class="product-info">
+            <h3>Straight Fit Denim Jeans</h3>
+            <div class="product-pricing">
+              <span class="price-current">PKR 3,290</span>
+              <span class="price-original">PKR 4,200</span>
+            </div>
+            <button class="btn-add-cart" type="button">Add to Cart</button>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         PROMO BANNER
+    ══════════════════════════════════════════ -->
+    <section class="promo-banner" aria-label="Promotional offer">
+      <h2>End of Season Sale — Up to 50% Off</h2>
+      <p>Limited time offer. Shop before stocks run out.</p>
+      <a href="#" class="btn-primary">Explore Sale</a>
+    </section>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════ -->
+  <footer>
+    <div class="footer-grid">
+
+      <div class="footer-brand">
+        <p class="logo-text">Engine</p>
+        <p>Engine is Pakistan's leading fashion brand, offering premium quality clothing for men, women, and kids. Style, comfort, and affordability — all in one place.</p>
+      </div>
+
+      <nav class="footer-col" aria-label="Quick links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Shop</a></li>
+          <li><a href="#">New Arrivals</a></li>
+          <li><a href="#">Sale</a></li>
+          <li><a href="#">About Us</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer-col" aria-label="Categories">
+        <h4>Categories</h4>
+        <ul>
+          <li><a href="#">Men</a></li>
+          <li><a href="#">Women</a></li>
+          <li><a href="#">Kids</a></li>
+          <li><a href="#">Accessories</a></li>
+          <li><a href="#">Footwear</a></li>
+        </ul>
+      </nav>
+
+      <address class="footer-col footer-contact">
+        <h4>Contact Us</h4>
+        <p>Engine Pvt. Ltd.<br />Plot 14, Sector I-9,<br />Islamabad, Pakistan</p>
+        <p>Phone: +92 51 111 364 364</p>
+        <p>Email: support@engine.com.pk</p>
+        <p>Mon – Sat: 9am – 6pm</p>
+      </address>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 Engine Pvt. Ltd. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="nav.js" defer></script>
+</body>
+</html>

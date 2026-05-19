@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body class="admin-body">
+
+  <%- include('partials/sidebar', { activePage: 'dashboard' }) %>
+
+  <main class="admin-main">
+
+    <!-- ── Top bar ── -->
+    <header class="admin-topbar">
+      <h1 class="admin-page-title">Dashboard</h1>
+      <a href="/admin/products/new" class="btn-admin-primary">+ Add Product</a>
+    </header>
+
+    <!-- ── Flash messages ── -->
+    <% if (success) { %>
+      <div class="alert alert-success" role="alert"><%= success %></div>
+    <% } %>
+    <% if (error) { %>
+      <div class="alert alert-error" role="alert"><%= error %></div>
+    <% } %>
+
+    <!-- ── Stats row ── -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-label">Total Products</span>
+        <span class="stat-value"><%= products.length %></span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">In Stock</span>
+        <span class="stat-value"><%= products.filter(p => p.stock > 0).length %></span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Out of Stock</span>
+        <span class="stat-value"><%= products.filter(p => p.stock === 0).length %></span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Categories</span>
+        <span class="stat-value"><%= [...new Set(products.map(p => p.category))].length %></span>
+      </div>
+    </div>
+
+    <!-- ── Products table ── -->
+    <section class="admin-card">
+      <div class="admin-card-header">
+        <h2>All Products</h2>
+        <span class="badge"><%= products.length %> total</span>
+      </div>
+
+      <% if (products.length === 0) { %>
+        <p class="empty-state">No products yet. <a href="/admin/products/new">Add one now →</a></p>
+      <% } else { %>
+
+        <div class="table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price (PKR)</th>
+                <th>Rating</th>
+                <th>Stock</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% products.forEach(function(product) { %>
+                <tr>
+
+                  <!-- Thumbnail -->
+                  <td>
+                    <img
+                      class="table-thumb"
+                      src="<%= product.image || 'https://placehold.co/60x60?text=N/A' %>"
+                      alt="<%= product.name %>"
+                    />
+                  </td>
+
+                  <!-- Name -->
+                  <td class="product-name-cell"><%= product.name %></td>
+
+                  <!-- Category -->
+                  <td><span class="category-pill"><%= product.category %></span></td>
+
+                  <!-- Price -->
+                  <td class="price-cell">PKR <%= product.price.toLocaleString() %></td>
+
+                  <!-- Rating -->
+                  <td>
+                    <span class="rating-cell"><%= product.rating.toFixed(1) %> ★</span>
+                  </td>
+
+                  <!-- Stock -->
+                  <td>
+                    <% if (product.stock === 0) { %>
+                      <span class="stock-badge out">0</span>
+                    <% } else if (product.stock < 10) { %>
+                      <span class="stock-badge low"><%= product.stock %></span>
+                    <% } else { %>
+                      <span class="stock-badge ok"><%= product.stock %></span>
+                    <% } %>
+                  </td>
+
+                  <!-- Actions -->
+                  <td class="actions-cell">
+
+                    <!-- Edit button -->
+                    <a href="/admin/products/<%= product._id %>/edit" class="btn-edit">Edit</a>
+
+                    <!--
+                      Delete form — uses method-override to send DELETE.
+                      The onclick confirmation prevents accidental deletes.
+                    -->
+                    <form
+                      action="/admin/products/<%= product._id %>?_method=DELETE"
+                      method="POST"
+                      class="delete-form"
+                      onsubmit="return confirm('Delete \'<%= product.name %>\'? This cannot be undone.')"
+                    >
+                      <button type="submit" class="btn-delete">Delete</button>
+                    </form>
+
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+
+      <% } %>
+    </section>
+
+  </main>
+
+</body>
+</html>

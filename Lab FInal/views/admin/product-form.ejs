@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body class="admin-body">
+
+  <%- include('partials/sidebar', { activePage: product ? 'edit' : 'add' }) %>
+
+  <main class="admin-main">
+
+    <!-- ── Top bar ── -->
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <a href="/admin" class="back-link">← Back to Dashboard</a>
+        <h1 class="admin-page-title">
+          <%= product ? 'Edit Product' : 'Add New Product' %>
+        </h1>
+      </div>
+    </header>
+
+    <!-- ── Validation errors ── -->
+    <% if (errors.length > 0) { %>
+      <div class="alert alert-error" role="alert">
+        <strong>Please fix the following errors:</strong>
+        <ul class="error-list">
+          <% errors.forEach(function(err) { %>
+            <li><%= err %></li>
+          <% }); %>
+        </ul>
+      </div>
+    <% } %>
+
+    <!-- ── Form card ── -->
+    <section class="admin-card form-card">
+
+      <!--
+        enctype="multipart/form-data" is required for file uploads.
+        The action and method are passed in from the controller so this
+        same template works for both Create and Update.
+      -->
+      <form
+        action="<%= action %>"
+        method="<%= method %>"
+        enctype="multipart/form-data"
+        class="product-form"
+        novalidate
+      >
+
+        <!-- ── Row 1: Name + Category ── -->
+        <div class="form-row">
+
+          <div class="form-group">
+            <label for="name">Product Name <span class="required">*</span></label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="e.g. Classic Crew Neck Tee"
+              value="<%= product ? product.name : '' %>"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="category">Category <span class="required">*</span></label>
+            <input
+              type="text"
+              id="category"
+              name="category"
+              placeholder="e.g. Men, Women, Kids"
+              value="<%= product ? product.category : '' %>"
+              list="category-suggestions"
+              required
+            />
+            <!-- Datalist gives autocomplete hints without locking the field -->
+            <datalist id="category-suggestions">
+              <option value="Men">
+              <option value="Women">
+              <option value="Kids">
+              <option value="Accessories">
+            </datalist>
+          </div>
+
+        </div>
+
+        <!-- ── Row 2: Price + Stock ── -->
+        <div class="form-row">
+
+          <div class="form-group">
+            <label for="price">Price (PKR) <span class="required">*</span></label>
+            <input
+              type="number"
+              id="price"
+              name="price"
+              placeholder="e.g. 1490"
+              min="0"
+              step="1"
+              value="<%= product ? product.price : '' %>"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="stock">Stock Quantity <span class="required">*</span></label>
+            <input
+              type="number"
+              id="stock"
+              name="stock"
+              placeholder="e.g. 50"
+              min="0"
+              step="1"
+              value="<%= product ? product.stock : '' %>"
+              required
+            />
+          </div>
+
+        </div>
+
+        <!-- ── Row 3: Rating ── -->
+        <div class="form-row">
+
+          <div class="form-group">
+            <label for="rating">Rating (0 – 5) <span class="required">*</span></label>
+            <input
+              type="number"
+              id="rating"
+              name="rating"
+              placeholder="e.g. 4.5"
+              min="0"
+              max="5"
+              step="0.1"
+              value="<%= product ? product.rating : '' %>"
+              required
+            />
+          </div>
+
+          <!-- Spacer to keep the grid balanced -->
+          <div class="form-group"></div>
+
+        </div>
+
+        <!-- ── Image upload ── -->
+        <div class="form-group full-width">
+          <label for="image">Product Image (jpg, png, webp — max 5 MB)</label>
+
+          <!-- Show current image when editing -->
+          <% if (product && product.image) { %>
+            <div class="current-image-preview">
+              <img src="<%= product.image %>" alt="Current product image" />
+              <p class="hint">Upload a new image to replace this one.</p>
+            </div>
+          <% } %>
+
+          <input
+            type="file"
+            id="image"
+            name="image"
+            accept="image/jpeg,image/png,image/gif,image/webp"
+            class="file-input"
+          />
+        </div>
+
+        <!-- ── Submit ── -->
+        <div class="form-actions">
+          <button type="submit" class="btn-admin-primary">
+            <%= product ? 'Save Changes' : 'Add Product' %>
+          </button>
+          <a href="/admin" class="btn-admin-secondary">Cancel</a>
+        </div>
+
+      </form>
+    </section>
+
+  </main>
+
+</body>
+</html>

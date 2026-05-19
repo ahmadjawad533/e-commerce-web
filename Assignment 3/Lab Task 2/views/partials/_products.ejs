@@ -1,0 +1,34 @@
+<section class="featured-products" aria-labelledby="products-heading">
+  <div class="section-title">
+    <h2 id="products-heading">Featured Products</h2>
+    <div class="divider"></div>
+    <p>Handpicked styles for the season</p>
+  </div>
+
+  <div class="products-grid">
+    <% products.forEach(function(product) { %>
+    <article class="product-card">
+      <div class="product-image">
+        <img
+          src="<%= product.image %>"
+          alt="<%= product.alt %>"
+          onerror="this.onerror=null;this.src='https://placehold.co/500x500/f5f5f7/aaaaaa?text=No+Image';"
+        />
+        <% if (product.badge) { %>
+        <span class="product-badge"><%= product.badge %></span>
+        <% } %>
+      </div>
+      <div class="product-info">
+        <h3><%= product.name %></h3>
+        <div class="product-pricing">
+          <span class="price-current"><%= product.price %></span>
+          <% if (product.originalPrice) { %>
+          <span class="price-original"><%= product.originalPrice %></span>
+          <% } %>
+        </div>
+        <button class="btn-add-cart" type="button">Add to Cart</button>
+      </div>
+    </article>
+    <% }); %>
+  </div>
+</section>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head', { title: title }) %>
+</head>
+<body>
+
+  <%- include('partials/header') %>
+
+  <main>
+    <%- include('partials/_hero') %>
+    <%- include('partials/_categories', { categories: categories }) %>
+    <%- include('partials/_products',   { products: products }) %>
+    <%- include('partials/_promo') %>
+  </main>
+
+  <%- include('partials/footer') %>
+
+  <script src="/js/nav.js" defer></script>
+</body>
+</html>

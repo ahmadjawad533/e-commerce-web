@@ -1,0 +1,75 @@
+# Implementation Plan
+
+- [ ] 1. Add modal markup and CSS to the page
+  - Append the `#qv-overlay` / `#qv-modal` HTML structure to `index.html` (before closing `</body>`)
+  - Add `.btn-quick-view`, `#qv-overlay`, `#qv-modal`, and `#qv-close` styles to `style.css`
+  - Ensure overlay is `display:none` by default and modal is centered via flexbox
+  - _Requirements: 3.3, 4.2, 4.3_
+
+- [ ] 2. Create `featured-deals.js` with core AJAX and DOM injection
+  - [ ] 2.1 Scaffold the IIFE and wire jQuery AJAX call on `DOMContentLoaded`
+    - Target `https://fakestoreapi.com/products?limit=4`
+    - Call `injectProducts(data)` on success, `showFallback()` on error
+    - Add jQuery CDN `<script>` tag to `index.html` before `featured-deals.js`
+    - _Requirements: 1.1, 4.1_
+  - [ ] 2.2 Implement `updateCard(card, product)`
+    - Replace `.product-image img` src and alt
+    - Replace `.product-info h3` text with product title
+    - Replace `.price-current` text with formatted price (`$X.XX`)
+    - Preserve all existing card classes and outer structure
+    - _Requirements: 1.3, 2.1, 2.2_
+  - [ ] 2.3 Implement `injectProducts(products)`
+    - Select all `.product-card` elements, iterate first 4
+    - Call `updateCard` for each card/product pair in order
+    - _Requirements: 1.2_
+  - [ ] 2.4 Write property test for Property 1: Sequential card injection
+    - **Property 1: For any array of 4 products, card[i] contains products[i].image, title, and price**
+    - **Validates: Requirements 1.2, 1.3**
+  - [ ] 2.5 Write property test for Property 2: Card outer structure preserved
+    - **Property 2: For any injected product, card still has class product-card with .product-image and .product-info children**
+    - **Validates: Requirements 2.1, 2.2**
+  - [ ] 2.6 Implement `showFallback()`
+    - Clear `.products-grid` inner HTML
+    - Insert `<p class="deals-error">Failed to load products.</p>`
+    - _Requirements: 1.4_
+  - [ ] 2.7 Write unit test for fallback message example
+    - Call `showFallback()` and assert `.products-grid` contains "Failed to load products."
+    - **Validates: Requirements 1.4**
+
+- [ ] 3. Implement Quick View button and modal behavior
+  - [ ] 3.1 Add Quick View button inside `updateCard`
+    - Append `<button class="btn-quick-view">Quick View</button>` to `.product-info`
+    - Attach click handler that calls `openModal(product)`
+    - _Requirements: 3.1_
+  - [ ] 3.2 Write property test for Property 3: Quick View button present
+    - **Property 3: For any injected product, .product-info contains a button with text "Quick View"**
+    - **Validates: Requirements 3.1**
+  - [ ] 3.3 Implement `openModal(product)` and `closeModal()`
+    - `openModal`: populate `#qv-img`, `#qv-title`, `#qv-desc`, `#qv-rating`; set `#qv-overlay` to `display:flex`
+    - `closeModal`: set `#qv-overlay` to `display:none`
+    - _Requirements: 3.2, 3.3_
+  - [ ] 3.4 Write property test for Property 4: Modal opens with correct content and overlay
+    - **Property 4: For any product, after Quick View click, #qv-overlay is visible and modal contains description and rating**
+    - **Validates: Requirements 3.2, 3.3**
+  - [ ] 3.5 Wire close-button and overlay-click handlers
+    - `#qv-close` click → `closeModal()`
+    - `#qv-overlay` click (not `#qv-modal`) → `closeModal()`
+    - _Requirements: 3.4, 3.5_
+  - [ ] 3.6 Write property test for Property 5: Modal closes on close-button click
+    - **Property 5: For any open modal state, clicking #qv-close hides #qv-overlay**
+    - **Validates: Requirements 3.4**
+  - [ ] 3.7 Write property test for Property 6: Modal closes on overlay click
+    - **Property 6: For any open modal state, clicking #qv-overlay (not #qv-modal) hides #qv-overlay**
+    - **Validates: Requirements 3.5**
+
+- [ ] 4. Checkpoint — Ensure all tests pass, ask the user if questions arise.
+
+- [ ] 5. Verify responsive behavior
+  - Confirm `.products-grid` CSS already handles `flex-direction: column` at `max-width: 768px` (existing rule)
+  - Confirm dynamically injected cards inherit the same responsive rules without additional overrides needed
+  - _Requirements: 2.3, 2.4_
+  - [ ] 5.1 Write property test for Property 7: Responsive layout direction
+    - **Property 7: For any viewport width, .products-grid flex-direction is column at <=768px and row otherwise**
+    - **Validates: Requirements 2.3, 2.4**
+
+- [ ] 6. Final Checkpoint — Ensure all tests pass, ask the user if questions arise.
